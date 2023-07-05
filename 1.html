@@ -1,106 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Discord-style Barcode Generator</title>
+    <title>Cute Barcode Generator</title>
     <style>
-        #barcode-container {
+        body {
+            background-color: #F8F8F8;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            margin-top: 50px;
+            height: 100vh;
+            font-family: Arial, sans-serif;
         }
         
-        #barcode-input {
+        .container {
+            background-color: #FFF;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #FF5773;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .barcode-input {
             width: 300px;
             padding: 10px;
             font-size: 16px;
             margin-bottom: 20px;
+            border: 1px solid #DDD;
+            border-radius: 4px;
+            outline: none;
         }
         
-        #barcode-image {
+        .barcode-image {
             margin-bottom: 20px;
         }
         
-        #screenshot-button {
+        .generate-button {
+            background-color: #FF5773;
+            color: #FFF;
             padding: 10px 20px;
             font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            outline: none;
+        }
+        
+        .generate-button:hover {
+            background-color: #E63C5A;
         }
     </style>
 </head>
 <body>
-    <div id="barcode-container">
-        <input type="text" id="barcode-input" placeholder="Enter text">
-        <button onclick="generateBarcode()">Generate Barcode</button>
+    <div class="container">
+        <h1>Cute Barcode Generator</h1>
+        <input type="text" class="barcode-input" placeholder="Enter text">
         <br>
-        <img id="barcode-image" src="" alt="Generated Barcode">
+        <canvas class="barcode-image"></canvas>
         <br>
-        <button onclick="takeScreenshot()">Take Screenshot</button>
+        <button class="generate-button" onclick="generateBarcode()">Generate Barcode</button>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.3"></script>
     <script>
         function generateBarcode() {
-            var input = document.getElementById('barcode-input').value;
-            var barcodeImage = document.getElementById('barcode-image');
+            var input = document.querySelector('.barcode-input').value;
+            var barcodeCanvas = document.querySelector('.barcode-image');
             
-            // Generate the barcode using a library of your choice
-            // Replace the code below with your barcode generation code
-            
-            // Example using the 'bwip-js' library
-            var bwip = require('bwip-js');
-            bwip.toCanvas(barcodeImage, {
-                bcid: 'code128',
-                text: input,
-                scale: 3,
-                height: 10,
-                includetext: true,
-                textxalign: 'center'
+            JsBarcode(barcodeCanvas, input, {
+                format: "CODE128",
+                displayValue: true,
+                textPosition: "bottom",
+                textMargin: 10,
+                width: 2,
+                height: 60,
+                margin: 10
             });
         }
-        
-        function takeScreenshot() {
-            // Request fullscreen for the document element
-            var elem = document.documentElement;
-            var screenshotButton = document.getElementById('screenshot-button');
-            
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.mozRequestFullScreen) { // Firefox
-                elem.mozRequestFullScreen();
-            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { // IE/Edge
-                elem.msRequestFullscreen();
-            }
-            
-            // Delay the screenshot capture to allow for fullscreen
-            setTimeout(function() {
-                // Take the screenshot using a server-side script
-                // Replace 'screenshot.php' with your server-side script
-                
-                // Example using AJAX
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', 'screenshot.php', true);
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        // Handle the server response, e.g., display the image
-                        var screenshotImage = document.createElement('img');
-                        screenshotImage.src = xhr.responseText;
-                        document.body.appendChild(screenshotImage);
-                    }
-                };
-                xhr.send();
-                
-                // Exit fullscreen
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.mozCancelFullScreen) { // Firefox
-                    document.mozCancelFullScreen();
-                } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) { // IE/Edge
-                    document.msExitFullscreen();
-                }
-            }, 1000); // Delay in milliseconds before taking the screenshot
-        }
     </script>
-</body
+</body>
+</html>
