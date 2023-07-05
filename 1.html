@@ -1,26 +1,106 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Barcode Generator</title>
-    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.3/dist/jsbarcode.min.js"></script>
+    <title>Discord-style Barcode Generator</title>
     <style>
-        #barcode {
+        #barcode-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        
+        #barcode-input {
             width: 300px;
-            height: auto;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        #barcode-image {
+            margin-bottom: 20px;
+        }
+        
+        #screenshot-button {
+            padding: 10px 20px;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <h1>Barcode Generator</h1>
-    <input type="text" id="text" placeholder="Enter text">
-    <button onclick="generateBarcode()">Generate Barcode</button>
-    <div id="barcode"></div>
+    <div id="barcode-container">
+        <input type="text" id="barcode-input" placeholder="Enter text">
+        <button onclick="generateBarcode()">Generate Barcode</button>
+        <br>
+        <img id="barcode-image" src="" alt="Generated Barcode">
+        <br>
+        <button onclick="takeScreenshot()">Take Screenshot</button>
+    </div>
 
     <script>
         function generateBarcode() {
-            var text = document.getElementById('text').value;
-            JsBarcode("#barcode", text);
+            var input = document.getElementById('barcode-input').value;
+            var barcodeImage = document.getElementById('barcode-image');
+            
+            // Generate the barcode using a library of your choice
+            // Replace the code below with your barcode generation code
+            
+            // Example using the 'bwip-js' library
+            var bwip = require('bwip-js');
+            bwip.toCanvas(barcodeImage, {
+                bcid: 'code128',
+                text: input,
+                scale: 3,
+                height: 10,
+                includetext: true,
+                textxalign: 'center'
+            });
+        }
+        
+        function takeScreenshot() {
+            // Request fullscreen for the document element
+            var elem = document.documentElement;
+            var screenshotButton = document.getElementById('screenshot-button');
+            
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { // Firefox
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE/Edge
+                elem.msRequestFullscreen();
+            }
+            
+            // Delay the screenshot capture to allow for fullscreen
+            setTimeout(function() {
+                // Take the screenshot using a server-side script
+                // Replace 'screenshot.php' with your server-side script
+                
+                // Example using AJAX
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'screenshot.php', true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        // Handle the server response, e.g., display the image
+                        var screenshotImage = document.createElement('img');
+                        screenshotImage.src = xhr.responseText;
+                        document.body.appendChild(screenshotImage);
+                    }
+                };
+                xhr.send();
+                
+                // Exit fullscreen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) { // Firefox
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { // IE/Edge
+                    document.msExitFullscreen();
+                }
+            }, 1000); // Delay in milliseconds before taking the screenshot
         }
     </script>
-</body>
-</html>
+</body
